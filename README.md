@@ -7,6 +7,35 @@ https://s3-us-west-2.amazonaws.com/usgs-lidar-public/USGS_LPC_FL_PalmBeachCo_201
 
 This repository contains documentation and extraction code, not the full LiDAR point cloud. Dataset metadata reports approximately 75.6 billion points, using LASzip encoding and EPSG:3857.
 
+## Download the complete EPT dataset to Windows (no admin rights)
+
+This mirrors **all EPT objects** (including ept.json, ept-data, ept-hierarchy, ept-sources). It is **not** the original USGS raw LAZ survey-tile layout.
+
+Install Python if necessary, then in Windows CMD:
+
+    python -m venv T:\lidar_env
+    T:\lidar_env\Scripts\python.exe -m pip install boto3
+
+Download or clone this repository. From the repository root, preview the total object count, download size and remaining disk space:
+
+    T:\lidar_env\Scripts\python.exe scripts\download_full_palmbeach_ept.py
+
+Test a small number of files:
+
+    T:\lidar_env\Scripts\python.exe scripts\download_full_palmbeach_ept.py --download --max-files 5
+
+Download the **entire public EPT project** to T:\LiDAR\PalmBeach\EPT:
+
+    T:\lidar_env\Scripts\python.exe scripts\download_full_palmbeach_ept.py --download
+
+Interrupted transfers retain *.part files; rerun exactly the same full command to resume. Re-running checks file sizes and skips matching completed downloads. The script uses unsigned S3 access, so there is no AWS account or Requester Pays requirement. Free disk space must exceed the remaining download size plus 1 GiB.
+
+If you already have AWS CLI installed, the equivalent is:
+
+    aws s3 sync s3://usgs-lidar-public/USGS_LPC_FL_PalmBeachCo_2016_LAS_2019/ T:\LiDAR\PalmBeach\EPT\ --no-sign-request --region us-west-2
+
+**Important:** EPT LAZ files are spatial octree tiles, not the original survey LAZ files. For original raw LAZ source tiles, use the separately hosted USGS original downloads or the Requester Pays AWS bucket. Do not add downloaded point cloud data to Git.
+
 ## Extract an area of interest to LAZ
 
 Install PDAL using Conda:

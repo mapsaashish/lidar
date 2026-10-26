@@ -1,0 +1,7 @@
+*.las
+*.laz
+*.copc.laz
+*.pipeline.json
+outputs/
+data/
+__pycache__/
